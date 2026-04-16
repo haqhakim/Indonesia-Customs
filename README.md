@@ -3,7 +3,7 @@
 
 ![Dashboard Preview](dashboard_preview.png)
 
-> **Live Dashboard →** [View on Tableau Public](#) *(replace with your link)*
+> **Live Dashboard →** [View on Tableau Public](#) *(https://public.tableau.com/authoring/TradeIndonesia/Dashboard1#3)*
 
 ---
 
