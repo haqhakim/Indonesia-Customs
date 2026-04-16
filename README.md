@@ -182,19 +182,6 @@ WHERE
   AND trade_value IS NOT NULL
   AND year BETWEEN 2000 AND 2030;
 ```
-
-**Cleaning decisions:**
-
-| Issue | Action | Reason |
-|---|---|---|
-| Negative trade values | → NULL | OEC data shouldn't have negatives; indicates data error |
-| Whitespace in Section | `TRIM()` | Prevents duplicate filter values in Tableau |
-| Type safety | `SAFE_CAST` not `CAST` | Returns NULL instead of crashing on bad values |
-| Year range guard | `BETWEEN 2000 AND 2030` | Catches corrupt year values (0, 9999, etc.) |
-| Added `signed_trade_value` | Export = positive, Import = negative | Powers trade balance charts directly |
-
-**Output table:** `cleaned_trade` — 12,410 rows, 8 columns
-
 ---
 
 ### 4. Tableau Prep Builder
@@ -220,7 +207,6 @@ Connected Tableau Prep directly to BigQuery (live connection — no CSV download
 
 Connected to `Trade table Indonesia.csv` as a Text File connection.
 
-**Data source:** 7 fields, 12,410 rows
 
 **Sheets built:**
 
@@ -246,5 +232,3 @@ SUM(IF [Trade Type] = 'import' THEN [Trade Value] END)
 // Active HS4 Count
 COUNTD(IF NOT ISNULL([Hs4]) THEN [Hs4] END)
 ```
-
-**Dashboard layout:** Fixed 1200×900px, 5 KPI cards + 4 charts in 2×2 grid
