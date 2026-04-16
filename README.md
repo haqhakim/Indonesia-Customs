@@ -1,8 +1,6 @@
 # Indonesia Trade Analytics Dashboard
 ### End-to-end data pipeline: The Observatory of Economic Complexity Data → BigQuery → Tableau Prep → Tableau Public
 
-![Dashboard Preview](dashboard_preview.png)
-
 > **Live Dashboard →** [View on Tableau Public](https://public.tableau.com/authoring/TradeIndonesia/Dashboard1#3)
 
 ---
@@ -16,7 +14,7 @@ The full pipeline runs from raw OEC data through BigQuery SQL validation, Tablea
 | | |
 |---|---|
 | **Data source** | [Observatory of Economic Complexity (OEC)](https://oec.world/en/profile/country/idn) |
-| **Classification** | HS92 — Harmonized System 1992 |
+| **Classification** | HS22 — Harmonized System 2022 |
 | **Period** | 2022, 2023, 2024 |
 | **Trade partners** | China, United States |
 | **Total rows** | 12,410 (after cleaning) |
@@ -41,8 +39,7 @@ The full pipeline runs from raw OEC data through BigQuery SQL validation, Tablea
 
 ---
 
-## 🏗️ Pipeline Architecture
-
+## Data Pipeline
 ```
 OEC Website
     │
@@ -67,37 +64,6 @@ Tableau Public Desktop
     │  Global filters + dashboard actions
     ▼
 Tableau Public (Published)
-```
-
----
-
-## 📁 Repository Structure
-
-```
-indonesia-trade-analytics/
-│
-├── README.md                        ← You are here
-│
-├── data/
-│   ├── raw/
-│   │   ├── Export_to_China.csv      ← Raw OEC export
-│   │   ├── Export_to_US.csv
-│   │   ├── Import_from_China.csv
-│   │   └── Import_from_US.csv
-│   └── processed/
-│       └── Trade_table_Indonesia.csv  ← Output from Tableau Prep
-│
-├── sql/
-│   ├── 01_validation.sql            ← Row counts, null checks, duplicates
-│   └── 02_cleaned_trade.sql         ← Master UNION ALL + cleaning query
-│
-├── tableau/
-│   └── Indonesia_Trade.twbx         ← Packaged Tableau workbook
-│
-└── screenshots/
-    ├── bigquery_schema.png
-    ├── tableau_prep_flow.png
-    └── dashboard_final.png
 ```
 
 ---
@@ -281,7 +247,6 @@ Connected Tableau Prep directly to BigQuery (live connection — no CSV download
 
 **Output:** `Trade table Indonesia.csv` — saved to Tableau Prep Datasources folder
 
-![Tableau Prep Flow](screenshots/tableau_prep_flow.png)
 
 ---
 
@@ -318,7 +283,6 @@ COUNTD(IF NOT ISNULL([Hs4]) THEN [Hs4] END)
 
 **Dashboard layout:** Fixed 1200×900px, 5 KPI cards + 4 charts in 2×2 grid
 
-![Dashboard](screenshots/dashboard_final.png)
 
 ---
 
