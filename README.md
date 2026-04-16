@@ -1,5 +1,5 @@
 # Indonesia Trade Analytics Dashboard
-### End-to-end data pipeline: OEC → BigQuery → Tableau Prep → Tableau Public
+### End-to-end data pipeline: The Observatory of Economic Complexity Data → BigQuery → Tableau Prep → Tableau Public
 
 ![Dashboard Preview](dashboard_preview.png)
 
