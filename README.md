@@ -81,9 +81,9 @@ Downloaded 4 CSV files from [OEC](https://oec.world/en/profile/country/idn) — 
 Created Google Cloud project: `indonesia-trade-analytics`
 Created dataset: `indonesia_trade`
 
-Uploaded each CSV as a separate table with **manual schema** to ensure correct types (BigQuery auto-detect reads Trade Value as FLOAT64).
+Uploaded each CSV as a separate table with manual schema to ensure correct types (BigQuery auto-detect reads Trade Value as FLOAT64).
 
-**Validation checks run before cleaning:**
+**Data Validation:**
 
 ```sql
 
@@ -100,15 +100,9 @@ SELECT HS4, Year, COUNT(*) AS occurrences
 FROM `indonesia_trade.export_china`
 GROUP BY HS4, Year
 HAVING COUNT(*) > 1
-
--- Year range check
-SELECT Year, COUNT(*) AS rows
-FROM `indonesia_trade.export_china`
-GROUP BY Year
-ORDER BY Year
 ```
 
-**All checks passed:** 0 nulls, 0 duplicates, years 2022–2024 only.
+Result: 0 nulls, 0 duplicates.
 
 ---
 
