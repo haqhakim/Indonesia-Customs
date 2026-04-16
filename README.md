@@ -86,14 +86,6 @@ Uploaded each CSV as a separate table with **manual schema** to ensure correct t
 **Validation checks run before cleaning:**
 
 ```sql
--- Row count per table
-SELECT 'export_china' AS tbl, COUNT(*) AS rows FROM `indonesia_trade.export_china`
-UNION ALL
-SELECT 'import_china', COUNT(*) FROM `indonesia_trade.import_china`
-UNION ALL
-SELECT 'export_us', COUNT(*) FROM `indonesia_trade.export_US`
-UNION ALL
-SELECT 'import_us', COUNT(*) FROM `indonesia_trade.import_US`
 
 -- Null check
 SELECT
