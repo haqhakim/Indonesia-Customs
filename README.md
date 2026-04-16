@@ -7,7 +7,7 @@
 
 ## 📌 Project Overview
 
-This project builds a **bilateral trade analytics dashboard** for Indonesia, analyzing export and import flows between Indonesia and its two largest trading partners — **China** and the **United States** — across **2022–2024**.
+This project builds a bilateral trade analytics dashboard for Indonesia, analyzing export and import flows between Indonesia and its two largest trading partners — China and the United States — across 2022–2024.
 
 The full pipeline runs from raw OEC data through BigQuery SQL validation, Tableau Prep cleaning, and final visualization on Tableau Public.
 
@@ -15,9 +15,8 @@ The full pipeline runs from raw OEC data through BigQuery SQL validation, Tablea
 |---|---|
 | **Data source** | [Observatory of Economic Complexity (OEC)](https://oec.world/en/profile/country/idn) |
 | **Classification** | HS22 — Harmonized System 2022 |
-| **Period** | 2022, 2023, 2024 |
+| **Period** | 2022 - 2024 |
 | **Trade partners** | China, United States |
-| **Total rows** | 12,410 (after cleaning) |
 | **Trade directions** | Export (Indonesia → partner) / Import (partner → Indonesia) |
 
 ---
@@ -26,16 +25,16 @@ The full pipeline runs from raw OEC data through BigQuery SQL validation, Tablea
 
 | Metric | Value |
 |---|---|
-| Total Export Value (2022–2024) | **$292.1B USD** |
-| Total Import Value (2022–2024) | **$236.2B USD** |
-| Overall Trade Balance | **+$55.8B USD surplus** |
+| Total Export Value (2022–2024) | **IDR292.1B** |
+| Total Import Value (2022–2024) | **IDR236.2B** |
+| Overall Trade Balance | **+IDR55.8B surpluss** |
 | Export / Import Ratio | **1.2x** |
-| Active HS4 product codes | **1,218** |
+| Active HS4 product codes | **1.218** |
 
 **Top export surplus sections (2024):**
-- 🥇 Metals — $15.9B
-- 🥈 Mineral Products — $15.8B
-- 🥉 Animal and Vegetable Bi-Products — $7.1B
+- Metals — IDR15.9B
+- Mineral Products — IDR15.8B
+- Animal and Vegetable Bi-Products — IDR7.1B
 
 ---
 
@@ -43,7 +42,7 @@ The full pipeline runs from raw OEC data through BigQuery SQL validation, Tablea
 ```
 OEC Website
     │
-    │  Manual download (CSV per trade direction × partner)
+    │  Manual download (CSV)
     ▼
 Google BigQuery
     │
@@ -57,12 +56,6 @@ Tableau Prep Builder
     │  Additional cleaning + column renaming
     │  Output: Trade table Indonesia.csv
     ▼
-Tableau Public Desktop
-    │
-    │  CSV connection → data source
-    │  4 sheets + dashboard assembly
-    │  Global filters + dashboard actions
-    ▼
 Tableau Public (Published)
 ```
 
@@ -74,32 +67,19 @@ Tableau Public (Published)
 
 Downloaded 4 CSV files from [OEC](https://oec.world/en/profile/country/idn) — bilateral trade data at HS4 product level:
 
-| File | Direction | Partner | Rows |
-|---|---|---|---|
-| `Export_to_China.csv` | Export | China | 2,935 |
-| `Import_from_China.csv` | Import | China | 3,476 |
-| `Export_to_US.csv` | Export | United States | 2,707 |
-| `Import_from_US.csv` | Import | United States | 3,292 |
-
-**Schema (all files identical):**
-
-| Column | Type | Description |
+| File | Direction | Partner |
 |---|---|---|
-| HS2 | String | HS chapter name (e.g. "Live animals") |
-| HS2 ID | Integer | Numeric HS chapter code |
-| HS4 | String | HS heading name (e.g. "Horses") |
-| HS4 ID | Integer | Numeric HS heading code |
-| Section | String | High-level section (21 unique values) |
-| Section ID | Integer | Numeric section code |
-| Trade Value | Float | FOB value in USD |
-| Year | Integer | 2022, 2023, or 2024 |
+| `Export_to_China.csv` | Export | China |
+| `Import_from_China.csv` | Import | China |
+| `Export_to_US.csv` | Export | United States |
+| `Import_from_US.csv` | Import | United States |
 
 ---
 
 ### 2. BigQuery — Upload & Schema
 
 Created Google Cloud project: `indonesia-trade-analytics`
-Created dataset: `indonesia_trade` (region: `asia-southeast1`)
+Created dataset: `indonesia_trade`
 
 Uploaded each CSV as a separate table with **manual schema** to ensure correct types (BigQuery auto-detect reads Trade Value as FLOAT64).
 
@@ -282,46 +262,3 @@ COUNTD(IF NOT ISNULL([Hs4]) THEN [Hs4] END)
 ```
 
 **Dashboard layout:** Fixed 1200×900px, 5 KPI cards + 4 charts in 2×2 grid
-
-
----
-
-## 🛠️ Tools & Technologies
-
-| Tool | Version | Purpose |
-|---|---|---|
-| Google BigQuery | — | Data warehouse, SQL validation & cleaning |
-| Tableau Prep Builder | 2024.x | Visual data cleaning flow |
-| Tableau Public Desktop | 2024.x | Dashboard authoring & publishing |
-| SQL (BigQuery dialect) | — | UNION ALL, SAFE_CAST, CTEs, CASE WHEN |
-
----
-
-## 💡 What I Learned
-
-- **SAFE_CAST vs CAST** — using SAFE_CAST in BigQuery returns NULL on failed conversions instead of throwing an error, which is essential when reading raw uploaded CSVs
-- **CTE pattern** — separating UNION ALL (`combined`) from cleaning logic (`cleaned`) makes SQL easier to debug and maintain
-- **Live BigQuery → Tableau Prep connection** — eliminates the need to download intermediate files; Prep reads directly from the warehouse
-- **Trade data insight** — Indonesia consistently runs a trade surplus with both China and the US across 2022–2024, driven primarily by Metals and Mineral Products (nickel, coal, palm oil derivatives)
-
----
-
-## 🔄 Known Limitations & Future Improvements
-
-- [ ] **Currency labeling** — labels should explicitly say "USD" not "IDR" (OEC data is USD-denominated)
-- [ ] **Add Japan** — original dataset included Japan; adding it back enables 3-way partner comparison
-- [ ] **Trade Value type** — currently FLOAT64; should cast to INT64 after ROUND() for cleaner aggregations
-- [ ] **Monthly granularity** — OEC also provides monthly data for more granular trend analysis
-- [ ] **Automate pipeline** — BigQuery scheduled queries + Tableau Prep flow scheduling for auto-refresh
-
----
-
-## 📚 Data Source
-
-**Observatory of Economic Complexity (OEC)**
-- URL: https://oec.world/en/profile/country/idn
-- Classification: HS92 (Harmonized System 1992 revision)
-- Trade values: FOB (Free on Board), USD
-- Downloaded: April 2026
-
-> OEC data is sourced from UN Comtrade and processed by the MIT Media Lab / Harvard Growth Lab. Please cite OEC if you reuse this data.
